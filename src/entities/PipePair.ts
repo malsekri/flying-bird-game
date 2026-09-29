@@ -11,7 +11,12 @@ export class PipePair {
 
   private active = true;
 
-  constructor(scene: Phaser.Scene, group: Phaser.Physics.Arcade.Group, gapCenterY: number) {
+  constructor(
+    scene: Phaser.Scene,
+    group: Phaser.Physics.Arcade.Group,
+    gapCenterY: number,
+    speed: number,
+  ) {
     const spawnX = GAME_WIDTH + GAMEPLAY.pipeWidth;
     const gapTop = gapCenterY - GAMEPLAY.pipeGap / 2;
     const gapBottom = gapCenterY + GAMEPLAY.pipeGap / 2;
@@ -32,8 +37,7 @@ export class PipePair {
     this.bottomPipe.setImmovable(true);
     (this.topPipe.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
     (this.bottomPipe.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
-    this.topPipe.setVelocityX(-GAMEPLAY.pipeSpeed);
-    this.bottomPipe.setVelocityX(-GAMEPLAY.pipeSpeed);
+    this.setSpeed(speed);
   }
 
   update(birdX: number): boolean {
@@ -60,6 +64,15 @@ export class PipePair {
 
     this.topPipe.setVelocityX(0);
     this.bottomPipe.setVelocityX(0);
+  }
+
+  setSpeed(speed: number): void {
+    if (!this.active || !this.topPipe.body || !this.bottomPipe.body) {
+      return;
+    }
+
+    this.topPipe.setVelocityX(-speed);
+    this.bottomPipe.setVelocityX(-speed);
   }
 
   destroy(): void {

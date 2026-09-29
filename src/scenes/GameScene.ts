@@ -18,12 +18,17 @@ export class GameScene extends Phaser.Scene {
 
   private gameOver = false;
 
+  private inputActive = true;
+
   constructor() {
     super(SCENE_KEYS.GAME);
   }
 
   create(): void {
     this.cameras.main.setBackgroundColor('#7dd3fc');
+    this.score = 0;
+    this.gameOver = false;
+    this.inputActive = true;
     this.createTextures();
 
     this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird-placeholder');
@@ -48,16 +53,17 @@ export class GameScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
   }
 
-  update(): void {
+  update(_time: number, delta: number): void {
     if (this.gameOver) {
       return;
     }
 
     this.bird.updateFlight();
-    this.score += this.pipeSpawner.update(this.bird.x);
+    this.score += this.pipeSpawner.update(this.bird.x, delta);
     this.scoreText.setText(String(this.score));
 
-    if (this.bird.y <= 0 || this.bird.y >= GAME_HEIGHT) {
+    const birdBody = this.bird.body as Phaser.Physics.Arcade.Body;
+    if (birdBody.bottom <= 0 || birdBody.top >= GAME_HEIGHT) {
       this.endGame();
     }
   }
@@ -85,7 +91,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private handleFlap(): void {
-    if (!this.gameOver) {
+    if (this.inputActive && !this.gameOver) {
       this.bird.flap();
     }
   }
@@ -96,7 +102,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.gameOver = true;
-    this.input.enabled = false;
+    this.inputActive = false;
+    this.input.keyboard?.off('keydown-SPACE', this.handleFlap, this);
+    this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.pipeSpawner.stop();
     this.bird.setVelocity(0, 0);
     StorageService.setHighScore(this.score);

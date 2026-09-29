@@ -12,25 +12,26 @@ export class PipeSpawner {
 
   private spawnTimer?: Phaser.Time.TimerEvent;
 
+  private elapsedSeconds = 0;
+
   constructor(scene: Phaser.Scene, pipeGroup: Phaser.Physics.Arcade.Group) {
     this.scene = scene;
     this.pipeGroup = pipeGroup;
   }
 
   start(): void {
+    this.elapsedSeconds = 0;
     this.spawnPair();
-    this.spawnTimer = this.scene.time.addEvent({
-      delay: GAMEPLAY.pipeSpawnInterval,
-      callback: this.spawnPair,
-      callbackScope: this,
-      loop: true,
-    });
+    this.scheduleNextSpawn();
   }
 
-  update(birdX: number): number {
+  update(birdX: number, delta: number): number {
+    this.elapsedSeconds += delta / 1000;
+    const speed = this.getCurrentSpeed();
     let scoreIncrease = 0;
 
     for (const pair of this.pairs) {
+      pair.setSpeed(speed);
       if (pair.update(birdX)) {
         scoreIncrease += 1;
       }
@@ -67,6 +68,41 @@ export class PipeSpawner {
   private spawnPair(): void {
     const gapCenterY = Phaser.Math.Between(GAMEPLAY.minimumGapCenterY, GAMEPLAY.maximumGapCenterY);
 
-    this.pairs.push(new PipePair(this.scene, this.pipeGroup, gapCenterY));
+    this.pairs.push(new PipePair(this.scene, this.pipeGroup, gapCenterY, this.getCurrentSpeed()));
+    this.scheduleNextSpawn();
+  }
+
+  private getCurrentSpeed(): number {
+    const warmupSeconds = Math.min(this.elapsedSeconds, GAMEPLAY.difficultyWarmupSeconds);
+    const lateGameSeconds = Math.max(this.elapsedSeconds - GAMEPLAY.difficultyWarmupSeconds, 0);
+
+    return Math.min(
+      GAMEPLAY.pipeSpeed +
+        warmupSeconds * GAMEPLAY.warmupPipeSpeedIncreasePerSecond +
+        lateGameSeconds * GAMEPLAY.latePipeSpeedIncreasePerSecond,
+      GAMEPLAY.maximumPipeSpeed,
+    );
+  }
+
+  private getSpawnInterval(): number {
+    const warmupSeconds = Math.min(this.elapsedSeconds, GAMEPLAY.difficultyWarmupSeconds);
+    const lateGameSeconds = Math.max(this.elapsedSeconds - GAMEPLAY.difficultyWarmupSeconds, 0);
+
+    return Math.max(
+      GAMEPLAY.pipeSpawnInterval -
+        warmupSeconds * GAMEPLAY.warmupSpawnIntervalDecreasePerSecond -
+        lateGameSeconds * GAMEPLAY.lateSpawnIntervalDecreasePerSecond,
+      GAMEPLAY.minimumPipeSpawnInterval,
+    );
+  }
+
+  private scheduleNextSpawn(): void {
+    this.spawnTimer?.remove(false);
+    this.spawnTimer = this.scene.time.delayedCall(
+      this.getSpawnInterval(),
+      this.spawnPair,
+      [],
+      this,
+    );
   }
 }
