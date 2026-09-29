@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH, SCENE_KEYS } from '../config/constants';
+import { StorageService } from '../services/StorageService';
 
 export class MenuScene extends Phaser.Scene {
   constructor() {
@@ -23,7 +24,16 @@ export class MenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 'Press Space / Tap to Play', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.57, `Best: ${StorageService.getHighScore()}`, {
+        color: '#0f172a',
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: '16px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.67, 'Press Space / Tap to Play', {
         color: '#0f172a',
         fontFamily: 'system-ui, sans-serif',
         fontSize: '14px',
@@ -31,7 +41,13 @@ export class MenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    let started = false;
     const startGame = (): void => {
+      if (started) {
+        return;
+      }
+
+      started = true;
       this.scene.start(SCENE_KEYS.GAME);
     };
 
