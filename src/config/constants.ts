@@ -12,3 +12,16 @@ export const PHYSICS = {
   gravityY: 900,
   flapVelocity: -300,
 } as const;
+
+export const GAMEPLAY = {
+  birdStartX: GAME_WIDTH * 0.25,
+  birdStartY: GAME_HEIGHT * 0.45,
+  maximumDownwardVelocity: 500,
+  pipeWidth: 52,
+  pipeHeight: 320,
+  pipeGap: 148,
+  pipeSpeed: 125,
+  pipeSpawnInterval: 1800,
+  minimumGapCenterY: 150,
+  maximumGapCenterY: 362,
+} as const;
