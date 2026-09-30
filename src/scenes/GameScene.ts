@@ -62,8 +62,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.bird.updateFlight();
-    this.score += this.pipeSpawner.update(this.bird.x, delta);
+    const scoreIncrease = this.pipeSpawner.update(this.bird.x, delta);
+    this.score += scoreIncrease;
     this.scoreText.setText(String(this.score));
+
+    if (scoreIncrease > 0) {
+      this.pulseScore();
+    }
 
     const birdBody = this.bird.body as Phaser.Physics.Arcade.Body;
     if (birdBody.bottom <= 0 || birdBody.top >= GAME_HEIGHT) {
@@ -77,6 +82,19 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  private pulseScore(): void {
+    this.tweens.killTweensOf(this.scoreText);
+    this.scoreText.setScale(1);
+    this.tweens.add({
+      targets: this.scoreText,
+      scale: 1.16,
+      duration: 75,
+      ease: 'Quad.Out',
+      yoyo: true,
+      hold: 0,
+    });
+  }
+
   private endGame(): void {
     if (this.gameOver) {
       return;
@@ -88,7 +106,9 @@ export class GameScene extends Phaser.Scene {
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.pipeSpawner.stop();
     this.bird.setVelocity(0, 0);
+    this.bird.setTint(0xffb8a3);
     StorageService.setHighScore(this.score);
+    this.cameras.main.flash(120, 255, 255, 255, false);
     this.cameras.main.shake(220, 0.008);
     this.time.delayedCall(250, () => {
       this.scene.start(SCENE_KEYS.GAME_OVER, {
