@@ -25,13 +25,16 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.cameras.main.setBackgroundColor('#7dd3fc');
+    this.cameras.main.setBackgroundColor('#0f172a');
     this.score = 0;
     this.gameOver = false;
     this.inputActive = true;
-    this.createTextures();
 
-    this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird-placeholder');
+    this.add
+      .image(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'background')
+      .setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
+
+    this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird');
     this.pipeGroup = this.physics.add.group({ allowGravity: false, immovable: true });
     this.pipeSpawner = new PipeSpawner(this, this.pipeGroup);
     this.pipeSpawner.start();
@@ -65,28 +68,6 @@ export class GameScene extends Phaser.Scene {
     const birdBody = this.bird.body as Phaser.Physics.Arcade.Body;
     if (birdBody.bottom <= 0 || birdBody.top >= GAME_HEIGHT) {
       this.endGame();
-    }
-  }
-
-  private createTextures(): void {
-    if (!this.textures.exists('bird-placeholder')) {
-      const birdGraphics = this.add.graphics();
-      birdGraphics.fillStyle(0xfacc15);
-      birdGraphics.fillEllipse(14, 10, 24, 16);
-      birdGraphics.fillStyle(0xf97316);
-      birdGraphics.fillTriangle(24, 10, 30, 7, 30, 13);
-      birdGraphics.generateTexture('bird-placeholder', 28, 20);
-      birdGraphics.destroy();
-    }
-
-    if (!this.textures.exists('pipe-placeholder')) {
-      const pipeGraphics = this.add.graphics();
-      pipeGraphics.fillStyle(0x16a34a);
-      pipeGraphics.fillRect(0, 0, 52, 320);
-      pipeGraphics.fillStyle(0x22c55e);
-      pipeGraphics.fillRect(0, 0, 8, 320);
-      pipeGraphics.generateTexture('pipe-placeholder', 52, 320);
-      pipeGraphics.destroy();
     }
   }
 

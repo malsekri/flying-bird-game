@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="320" viewBox="0 0 52 320" role="img" aria-label="Pipe">
+  <defs>
+    <linearGradient id="pipeBody" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#7c8db5"/>
+      <stop offset="50%" stop-color="#4b5d85"/>
+      <stop offset="100%" stop-color="#273a5d"/>
+    </linearGradient>
+    <linearGradient id="pipeGlow" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#dbeafe" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#dbeafe" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="52" height="320" rx="10" fill="url(#pipeBody)"/>
+  <rect x="8" y="0" width="8" height="320" fill="url(#pipeGlow)" opacity="0.9"/>
+  <rect x="0" y="0" width="52" height="18" rx="10" fill="#e2e8f0" opacity="0.72"/>
+  <rect x="0" y="302" width="52" height="18" rx="10" fill="#111827" opacity="0.52"/>
+  <path d="M0 12h52v18H0z" fill="#c7d2fe" opacity="0.35"/>
+  <path d="M25.5 0v320" stroke="#0f172a" stroke-width="2" opacity="0.34"/>
+</svg>

@@ -16,6 +16,10 @@ export class BootScene extends Phaser.Scene {
     const background = this.add.rectangle(x, y, barWidth, barHeight, 0x0f172a, 0.25).setOrigin(0);
     const progress = this.add.rectangle(x, y, 0, barHeight, 0xffffff).setOrigin(0);
 
+    this.load.image('background', 'assets/visual/background.svg');
+    this.load.image('bird', 'assets/visual/bird.svg');
+    this.load.image('pipe', 'assets/visual/pipe.svg');
+
     this.load.on(Phaser.Loader.Events.PROGRESS, (value: number) => {
       progress.width = barWidth * value;
     });
@@ -24,8 +28,6 @@ export class BootScene extends Phaser.Scene {
       background.destroy();
       progress.destroy();
     });
-
-    // Asset loading will be added in the gameplay/polish phase.
   }
 
   create(): void {

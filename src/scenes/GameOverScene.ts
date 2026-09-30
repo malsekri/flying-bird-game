@@ -24,6 +24,13 @@ export class GameOverScene extends Phaser.Scene {
 
   create(): void {
     this.cameras.main.setBackgroundColor('#0f172a');
+    this.add
+      .image(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'background')
+      .setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
+
+    this.add
+      .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.52, 190, 118, 0x0f172a, 0.5)
+      .setStrokeStyle(2, 0xe2e8f0, 0.7);
 
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.3, 'GAME OVER', {
@@ -31,6 +38,8 @@ export class GameOverScene extends Phaser.Scene {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '28px',
         fontStyle: 'bold',
+        stroke: '#0f172a',
+        strokeThickness: 6,
       })
       .setOrigin(0.5);
 
@@ -41,15 +50,19 @@ export class GameOverScene extends Phaser.Scene {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '18px',
         lineSpacing: 8,
+        fontStyle: 'bold',
       })
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.7, 'Press Space / Tap to Retry', {
-        color: '#38bdf8',
+      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.7, 'Press Space / Tap to Retry\nEscape → Menu', {
+        align: 'center',
+        color: '#0f172a',
         fontFamily: 'system-ui, sans-serif',
         fontSize: '14px',
         fontStyle: 'bold',
+        backgroundColor: '#f8fafcAA',
+        padding: { x: 12, y: 8 },
       })
       .setOrigin(0.5);
 

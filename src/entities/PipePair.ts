@@ -21,16 +21,10 @@ export class PipePair {
     const gapTop = gapCenterY - GAMEPLAY.pipeGap / 2;
     const gapBottom = gapCenterY + GAMEPLAY.pipeGap / 2;
 
-    this.topPipe = scene.physics.add.image(
-      spawnX,
-      gapTop - GAMEPLAY.pipeHeight / 2,
-      'pipe-placeholder',
-    );
-    this.bottomPipe = scene.physics.add.image(
-      spawnX,
-      gapBottom + GAMEPLAY.pipeHeight / 2,
-      'pipe-placeholder',
-    );
+    this.topPipe = scene.physics.add.image(spawnX, gapTop - GAMEPLAY.pipeHeight / 2, 'pipe');
+    this.bottomPipe = scene.physics.add.image(spawnX, gapBottom + GAMEPLAY.pipeHeight / 2, 'pipe');
+
+    this.topPipe.setFlipY(true);
 
     group.addMultiple([this.topPipe, this.bottomPipe]);
     this.topPipe.setImmovable(true);
