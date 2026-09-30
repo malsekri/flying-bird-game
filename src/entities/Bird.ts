@@ -11,7 +11,7 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
 
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setAllowGravity(true);
-    body.setSize(22, 16, true);
+    body.setSize(26, 18, true);
     body.setMaxVelocity(0, GAMEPLAY.maximumDownwardVelocity);
     body.setCollideWorldBounds(false);
   }

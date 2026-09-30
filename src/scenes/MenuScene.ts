@@ -9,7 +9,10 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.cameras.main.setBackgroundColor('#38bdf8');
+    this.cameras.main.setBackgroundColor('#0b1426');
+    this.add
+      .image(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'background')
+      .setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
 
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.3, 'FLYING\nBIRD', {
@@ -19,7 +22,14 @@ export class MenuScene extends Phaser.Scene {
         fontSize: '36px',
         fontStyle: 'bold',
         stroke: '#0f172a',
-        strokeThickness: 5,
+        strokeThickness: 6,
+        shadow: {
+          color: '#0f172a',
+          fill: true,
+          offsetX: 0,
+          offsetY: 4,
+          blur: 0,
+        },
       })
       .setOrigin(0.5);
 
@@ -29,6 +39,8 @@ export class MenuScene extends Phaser.Scene {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '16px',
         fontStyle: 'bold',
+        backgroundColor: '#f8fafcAA',
+        padding: { x: 10, y: 6 },
       })
       .setOrigin(0.5);
 
@@ -38,6 +50,8 @@ export class MenuScene extends Phaser.Scene {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '14px',
         fontStyle: 'bold',
+        backgroundColor: '#f8fafcAA',
+        padding: { x: 12, y: 8 },
       })
       .setOrigin(0.5);
 
