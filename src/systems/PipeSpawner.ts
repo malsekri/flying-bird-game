@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { GAMEPLAY } from '../config/constants';
 import { PipePair } from '../entities/PipePair';
+import { getDifficultyValues } from './difficulty';
 
 export class PipeSpawner {
   private readonly scene: Phaser.Scene;
@@ -27,11 +28,11 @@ export class PipeSpawner {
 
   update(birdX: number, delta: number): number {
     this.elapsedSeconds += delta / 1000;
-    const speed = this.getCurrentSpeed();
+    const { pipeSpeed } = getDifficultyValues(this.elapsedSeconds);
     let scoreIncrease = 0;
 
     for (const pair of this.pairs) {
-      pair.setSpeed(speed);
+      pair.setSpeed(pipeSpeed);
       if (pair.update(birdX)) {
         scoreIncrease += 1;
       }
@@ -68,32 +69,13 @@ export class PipeSpawner {
   private spawnPair(): void {
     const gapCenterY = Phaser.Math.Between(GAMEPLAY.minimumGapCenterY, GAMEPLAY.maximumGapCenterY);
 
-    this.pairs.push(new PipePair(this.scene, this.pipeGroup, gapCenterY, this.getCurrentSpeed()));
+    const { pipeSpeed } = getDifficultyValues(this.elapsedSeconds);
+    this.pairs.push(new PipePair(this.scene, this.pipeGroup, gapCenterY, pipeSpeed));
     this.scheduleNextSpawn();
   }
 
-  private getCurrentSpeed(): number {
-    const warmupSeconds = Math.min(this.elapsedSeconds, GAMEPLAY.difficultyWarmupSeconds);
-    const lateGameSeconds = Math.max(this.elapsedSeconds - GAMEPLAY.difficultyWarmupSeconds, 0);
-
-    return Math.min(
-      GAMEPLAY.pipeSpeed +
-        warmupSeconds * GAMEPLAY.warmupPipeSpeedIncreasePerSecond +
-        lateGameSeconds * GAMEPLAY.latePipeSpeedIncreasePerSecond,
-      GAMEPLAY.maximumPipeSpeed,
-    );
-  }
-
   private getSpawnInterval(): number {
-    const warmupSeconds = Math.min(this.elapsedSeconds, GAMEPLAY.difficultyWarmupSeconds);
-    const lateGameSeconds = Math.max(this.elapsedSeconds - GAMEPLAY.difficultyWarmupSeconds, 0);
-
-    return Math.max(
-      GAMEPLAY.pipeSpawnInterval -
-        warmupSeconds * GAMEPLAY.warmupSpawnIntervalDecreasePerSecond -
-        lateGameSeconds * GAMEPLAY.lateSpawnIntervalDecreasePerSecond,
-      GAMEPLAY.minimumPipeSpawnInterval,
-    );
+    return getDifficultyValues(this.elapsedSeconds).spawnInterval;
   }
 
   private scheduleNextSpawn(): void {
