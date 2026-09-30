@@ -19,11 +19,11 @@ Your best score is saved locally in the browser, so you can come back and try to
 
 ## Controls
 
-| Input | Action |
-| --- | --- |
-| `Space` | Start, flap, or retry |
-| Click / Tap | Start, flap, or retry |
-| `Escape` | Return to the menu from Game Over |
+| Input       | Action                            |
+| ----------- | --------------------------------- |
+| `Space`     | Start, flap, or retry             |
+| Click / Tap | Start, flap, or retry             |
+| `Escape`    | Return to the menu from Game Over |
 
 The same basic controls work across desktop and touch devices.
 
@@ -88,19 +88,19 @@ Vite will print the local URL in the terminal.
 
 ## Useful Commands
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the local Vite dev server |
-| `npm run build` | Type-check and create a production build |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Fix supported lint issues |
-| `npm run format` | Format the project with Prettier |
-| `npm run format:check` | Check formatting without changing files |
-| `npm run typecheck` | Run TypeScript checks |
-| `npm run test` | Run the test suite |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run check` | Run the full quality check |
+| Command                | What it does                             |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Start the local Vite dev server          |
+| `npm run build`        | Type-check and create a production build |
+| `npm run preview`      | Preview the production build locally     |
+| `npm run lint`         | Run ESLint                               |
+| `npm run lint:fix`     | Fix supported lint issues                |
+| `npm run format`       | Format the project with Prettier         |
+| `npm run format:check` | Check formatting without changing files  |
+| `npm run typecheck`    | Run TypeScript checks                    |
+| `npm run test`         | Run the test suite                       |
+| `npm run test:watch`   | Run tests in watch mode                  |
+| `npm run check`        | Run the full quality check               |
 
 To run everything in one go:
 
