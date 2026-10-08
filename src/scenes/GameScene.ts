@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { GAME_HEIGHT, GAMEPLAY, GAME_WIDTH, SCENE_KEYS } from '../config/constants';
 import { Bird } from '../entities/Bird';
 import { StorageService } from '../services/StorageService';
+import { ParallaxBackground } from '../systems/ParallaxBackground';
 import { PipeSpawner } from '../systems/PipeSpawner';
 
 export class GameScene extends Phaser.Scene {
@@ -13,6 +14,8 @@ export class GameScene extends Phaser.Scene {
   private pipeSpawner!: PipeSpawner;
 
   private scoreText!: Phaser.GameObjects.Text;
+
+  private background!: ParallaxBackground;
 
   private score = 0;
 
@@ -30,9 +33,7 @@ export class GameScene extends Phaser.Scene {
     this.gameOver = false;
     this.inputActive = true;
 
-    this.add
-      .image(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'background')
-      .setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
+    this.background = new ParallaxBackground(this);
 
     this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird');
     this.pipeGroup = this.physics.add.group({ allowGravity: false, immovable: true });
@@ -48,7 +49,8 @@ export class GameScene extends Phaser.Scene {
         stroke: '#0f172a',
         strokeThickness: 5,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(10);
 
     this.input.keyboard?.on('keydown-SPACE', this.handleFlap, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
@@ -61,6 +63,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
+    this.background.update(delta);
     this.bird.updateFlight();
     const scoreIncrease = this.pipeSpawner.update(this.bird.x, delta);
     this.score += scoreIncrease;
