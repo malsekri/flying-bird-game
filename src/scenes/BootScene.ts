@@ -17,6 +17,7 @@ export class BootScene extends Phaser.Scene {
     const progress = this.add.rectangle(x, y, 0, barHeight, 0xffffff).setOrigin(0);
 
     this.load.image('background', 'assets/visual/background.svg');
+    this.load.image('background-stars', 'assets/visual/background-stars.svg');
     this.load.image('bird', 'assets/visual/bird.svg');
     this.load.image('bird-flap', 'assets/visual/bird-flap.svg');
     this.load.image('pipe', 'assets/visual/pipe.svg');

@@ -25,6 +25,8 @@ export class PipePair {
     this.bottomPipe = scene.physics.add.image(spawnX, gapBottom + GAMEPLAY.pipeHeight / 2, 'pipe');
 
     this.topPipe.setFlipY(true);
+    this.topPipe.setDepth(2);
+    this.bottomPipe.setDepth(2);
 
     group.addMultiple([this.topPipe, this.bottomPipe]);
     this.topPipe.setImmovable(true);

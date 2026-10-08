@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH, SCENE_KEYS } from '../config/constants';
+import { ParallaxBackground } from '../systems/ParallaxBackground';
 
 interface GameOverData {
   score?: number;
@@ -11,6 +12,8 @@ export class GameOverScene extends Phaser.Scene {
   private score = 0;
 
   private highScore = 0;
+
+  private background!: ParallaxBackground;
 
   constructor() {
     super(SCENE_KEYS.GAME_OVER);
@@ -24,13 +27,12 @@ export class GameOverScene extends Phaser.Scene {
 
   create(): void {
     this.cameras.main.setBackgroundColor('#0f172a');
-    this.add
-      .image(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'background')
-      .setDisplaySize(GAME_WIDTH, GAME_HEIGHT);
+    this.background = new ParallaxBackground(this);
 
     this.add
       .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.52, 190, 118, 0x0f172a, 0.5)
-      .setStrokeStyle(2, 0xe2e8f0, 0.7);
+      .setStrokeStyle(2, 0xe2e8f0, 0.7)
+      .setDepth(5);
 
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.3, 'GAME OVER', {
@@ -41,7 +43,8 @@ export class GameOverScene extends Phaser.Scene {
         stroke: '#0f172a',
         strokeThickness: 6,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(10);
 
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.48, `Score: ${this.score}\nBest: ${this.highScore}`, {
@@ -52,7 +55,8 @@ export class GameOverScene extends Phaser.Scene {
         lineSpacing: 8,
         fontStyle: 'bold',
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(10);
 
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.7, 'Press Space / Tap to Retry\nEscape → Menu', {
@@ -64,7 +68,8 @@ export class GameOverScene extends Phaser.Scene {
         backgroundColor: '#f8fafcAA',
         padding: { x: 12, y: 8 },
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(10);
 
     let handled = false;
     const restart = (): void => {
@@ -87,5 +92,9 @@ export class GameOverScene extends Phaser.Scene {
     this.input.keyboard?.once('keydown-SPACE', restart);
     this.input.keyboard?.once('keydown-ESC', returnToMenu);
     this.input.once(Phaser.Input.Events.POINTER_DOWN, restart);
+  }
+
+  update(_time: number, delta: number): void {
+    this.background.update(delta);
   }
 }
