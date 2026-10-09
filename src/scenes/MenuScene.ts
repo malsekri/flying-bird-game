@@ -1,11 +1,15 @@
 import Phaser from 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH, SCENE_KEYS } from '../config/constants';
+import { AudioService } from '../services/AudioService';
 import { StorageService } from '../services/StorageService';
 import { ParallaxBackground } from '../systems/ParallaxBackground';
+import { MuteControl } from '../ui/MuteControl';
 
 export class MenuScene extends Phaser.Scene {
   private background!: ParallaxBackground;
+
+  private audio!: AudioService;
 
   constructor() {
     super(SCENE_KEYS.MENU);
@@ -14,6 +18,8 @@ export class MenuScene extends Phaser.Scene {
   create(): void {
     this.cameras.main.setBackgroundColor('#0b1426');
     this.background = new ParallaxBackground(this);
+    this.audio = new AudioService(this);
+    new MuteControl(this, this.audio);
 
     this.add
       .image(GAME_WIDTH / 2, GAME_HEIGHT * 0.42, 'bird')

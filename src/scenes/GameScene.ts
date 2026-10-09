@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { GAME_HEIGHT, GAMEPLAY, GAME_WIDTH, SCENE_KEYS } from '../config/constants';
 import { Bird } from '../entities/Bird';
+import { AudioService } from '../services/AudioService';
 import { StorageService } from '../services/StorageService';
 import { ParallaxBackground } from '../systems/ParallaxBackground';
 import { PipeSpawner } from '../systems/PipeSpawner';
@@ -16,6 +17,8 @@ export class GameScene extends Phaser.Scene {
   private scoreText!: Phaser.GameObjects.Text;
 
   private background!: ParallaxBackground;
+
+  private audio!: AudioService;
 
   private score = 0;
 
@@ -34,6 +37,7 @@ export class GameScene extends Phaser.Scene {
     this.inputActive = true;
 
     this.background = new ParallaxBackground(this);
+    this.audio = new AudioService(this);
 
     this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird');
     this.pipeGroup = this.physics.add.group({ allowGravity: false, immovable: true });
@@ -53,6 +57,7 @@ export class GameScene extends Phaser.Scene {
       .setDepth(10);
 
     this.input.keyboard?.on('keydown-SPACE', this.handleFlap, this);
+    this.input.keyboard?.on('keydown-M', this.handleMute, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.physics.add.overlap(this.bird, this.pipeGroup, () => this.endGame());
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
@@ -71,6 +76,7 @@ export class GameScene extends Phaser.Scene {
 
     if (scoreIncrease > 0) {
       this.pulseScore();
+      this.audio.playScore();
     }
 
     const birdBody = this.bird.body as Phaser.Physics.Arcade.Body;
@@ -82,7 +88,12 @@ export class GameScene extends Phaser.Scene {
   private handleFlap(): void {
     if (this.inputActive && !this.gameOver) {
       this.bird.flap();
+      this.audio.playFlap();
     }
+  }
+
+  private handleMute(): void {
+    this.audio.toggleMuted();
   }
 
   private pulseScore(): void {
@@ -106,8 +117,10 @@ export class GameScene extends Phaser.Scene {
     this.gameOver = true;
     this.inputActive = false;
     this.input.keyboard?.off('keydown-SPACE', this.handleFlap, this);
+    this.input.keyboard?.off('keydown-M', this.handleMute, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.pipeSpawner.stop();
+    this.audio.playDeath();
     this.bird.setVelocity(0, 0);
     this.bird.setTint(0xffb8a3);
     StorageService.setHighScore(this.score);
@@ -123,7 +136,9 @@ export class GameScene extends Phaser.Scene {
 
   private cleanup(): void {
     this.input.keyboard?.off('keydown-SPACE', this.handleFlap, this);
+    this.input.keyboard?.off('keydown-M', this.handleMute, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.pipeSpawner.destroy();
+    this.audio.destroy();
   }
 }

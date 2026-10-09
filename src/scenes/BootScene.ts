@@ -21,6 +21,9 @@ export class BootScene extends Phaser.Scene {
     this.load.image('bird', 'assets/visual/bird.svg');
     this.load.image('bird-flap', 'assets/visual/bird-flap.svg');
     this.load.image('pipe', 'assets/visual/pipe.svg');
+    this.load.audio('flap', 'assets/audio/flap.wav');
+    this.load.audio('score', 'assets/audio/score.wav');
+    this.load.audio('death', 'assets/audio/death.wav');
 
     this.load.on(Phaser.Loader.Events.PROGRESS, (value: number) => {
       progress.width = barWidth * value;

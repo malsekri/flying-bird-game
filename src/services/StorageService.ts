@@ -1,5 +1,7 @@
 const HIGH_SCORE_KEY = 'flying-bird-game:high-score';
 
+const AUDIO_MUTED_KEY = 'flying-bird-game:audio-muted';
+
 export class StorageService {
   static getHighScore(): number {
     const storedValue = window.localStorage.getItem(HIGH_SCORE_KEY);
@@ -15,5 +17,13 @@ export class StorageService {
     window.localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
 
     return highScore;
+  }
+
+  static getAudioMuted(): boolean {
+    return window.localStorage.getItem(AUDIO_MUTED_KEY) === 'true';
+  }
+
+  static setAudioMuted(muted: boolean): void {
+    window.localStorage.setItem(AUDIO_MUTED_KEY, String(muted));
   }
 }
