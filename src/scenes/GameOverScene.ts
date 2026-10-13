@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { GAME_HEIGHT, GAME_WIDTH, SCENE_KEYS } from '../config/constants';
 import { AudioService } from '../services/AudioService';
 import { ParallaxBackground } from '../systems/ParallaxBackground';
+import { MuteControl } from '../ui/MuteControl';
 
 interface GameOverData {
   score?: number;
@@ -32,6 +33,7 @@ export class GameOverScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#0f172a');
     this.background = new ParallaxBackground(this);
     this.audio = new AudioService(this);
+    new MuteControl(this, this.audio);
 
     this.add
       .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.52, 190, 118, 0x0f172a, 0.5)
@@ -95,13 +97,8 @@ export class GameOverScene extends Phaser.Scene {
 
     this.input.keyboard?.once('keydown-SPACE', restart);
     this.input.keyboard?.once('keydown-ESC', returnToMenu);
-    this.input.keyboard?.on('keydown-M', this.handleMute, this);
     this.input.once(Phaser.Input.Events.POINTER_DOWN, restart);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
-  }
-
-  private handleMute(): void {
-    this.audio.toggleMuted();
   }
 
   update(_time: number, delta: number): void {
@@ -109,7 +106,6 @@ export class GameOverScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
-    this.input.keyboard?.off('keydown-M', this.handleMute, this);
     this.audio.destroy();
   }
 }

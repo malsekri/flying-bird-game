@@ -6,6 +6,8 @@ import type { AudioService } from '../services/AudioService';
 export class MuteControl {
   private readonly label: Phaser.GameObjects.Text;
 
+  private readonly hitArea: Phaser.GameObjects.Rectangle;
+
   constructor(
     private readonly scene: Phaser.Scene,
     private readonly audio: AudioService,
@@ -14,17 +16,22 @@ export class MuteControl {
       .text(GAME_WIDTH - 8, 8, '', {
         color: '#f8fafc',
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '10px',
+        fontSize: '11px',
         fontStyle: 'bold',
         backgroundColor: '#0f172acc',
-        padding: { x: 5, y: 4 },
+        padding: { x: 6, y: 5 },
       })
       .setOrigin(1, 0)
-      .setDepth(20)
+      .setDepth(20);
+
+    this.hitArea = scene.add
+      .rectangle(GAME_WIDTH - 4, 4, 80, 44, 0x000000, 0)
+      .setOrigin(1, 0)
+      .setDepth(19)
       .setInteractive({ useHandCursor: true });
 
     this.updateLabel();
-    this.label.on('pointerdown', this.handlePointerDown, this);
+    this.hitArea.on('pointerdown', this.handlePointerDown, this);
     this.scene.input.keyboard?.on('keydown-M', this.toggle, this);
     this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
   }
@@ -49,8 +56,9 @@ export class MuteControl {
   }
 
   private destroy(): void {
-    this.label.off('pointerdown', this.handlePointerDown, this);
+    this.hitArea.off('pointerdown', this.handlePointerDown, this);
     this.scene.input.keyboard?.off('keydown-M', this.toggle, this);
+    this.hitArea.destroy();
     this.label.destroy();
   }
 }

@@ -6,6 +6,7 @@ import { AudioService } from '../services/AudioService';
 import { StorageService } from '../services/StorageService';
 import { ParallaxBackground } from '../systems/ParallaxBackground';
 import { PipeSpawner } from '../systems/PipeSpawner';
+import { MuteControl } from '../ui/MuteControl';
 
 export class GameScene extends Phaser.Scene {
   private bird!: Bird;
@@ -38,6 +39,7 @@ export class GameScene extends Phaser.Scene {
 
     this.background = new ParallaxBackground(this);
     this.audio = new AudioService(this);
+    new MuteControl(this, this.audio);
 
     this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird');
     this.pipeGroup = this.physics.add.group({ allowGravity: false, immovable: true });
@@ -57,7 +59,6 @@ export class GameScene extends Phaser.Scene {
       .setDepth(10);
 
     this.input.keyboard?.on('keydown-SPACE', this.handleFlap, this);
-    this.input.keyboard?.on('keydown-M', this.handleMute, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.physics.add.overlap(this.bird, this.pipeGroup, () => this.endGame());
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
@@ -92,10 +93,6 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  private handleMute(): void {
-    this.audio.toggleMuted();
-  }
-
   private pulseScore(): void {
     this.tweens.killTweensOf(this.scoreText);
     this.scoreText.setScale(1);
@@ -117,7 +114,6 @@ export class GameScene extends Phaser.Scene {
     this.gameOver = true;
     this.inputActive = false;
     this.input.keyboard?.off('keydown-SPACE', this.handleFlap, this);
-    this.input.keyboard?.off('keydown-M', this.handleMute, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.pipeSpawner.stop();
     this.audio.playDeath();
@@ -136,7 +132,6 @@ export class GameScene extends Phaser.Scene {
 
   private cleanup(): void {
     this.input.keyboard?.off('keydown-SPACE', this.handleFlap, this);
-    this.input.keyboard?.off('keydown-M', this.handleMute, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handleFlap, this);
     this.pipeSpawner.destroy();
     this.audio.destroy();
