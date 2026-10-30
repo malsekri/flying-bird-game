@@ -6,7 +6,6 @@ import { AudioService } from '../services/AudioService';
 import { StorageService } from '../services/StorageService';
 import { ParallaxBackground } from '../systems/ParallaxBackground';
 import { PipeSpawner } from '../systems/PipeSpawner';
-import { MuteControl } from '../ui/MuteControl';
 
 export class GameScene extends Phaser.Scene {
   private bird!: Bird;
@@ -39,7 +38,6 @@ export class GameScene extends Phaser.Scene {
 
     this.background = new ParallaxBackground(this);
     this.audio = new AudioService(this);
-    new MuteControl(this, this.audio);
 
     this.bird = new Bird(this, GAMEPLAY.birdStartX, GAMEPLAY.birdStartY, 'bird');
     this.pipeGroup = this.physics.add.group({ allowGravity: false, immovable: true });
