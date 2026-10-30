@@ -1,18 +1,18 @@
 import type Phaser from 'phaser';
 
-import { StorageService } from './StorageService';
-
 const FLAP_VOLUME = 0.22;
 const SCORE_VOLUME = 0.5;
 const DEATH_VOLUME = 0.45;
 
 export class AudioService {
+  private static sessionMuted = false;
+
   private flapSound?: Phaser.Sound.BaseSound;
 
   private muted: boolean;
 
   constructor(private readonly scene: Phaser.Scene) {
-    this.muted = StorageService.getAudioMuted();
+    this.muted = AudioService.sessionMuted;
     this.scene.sound.setMute(this.muted);
   }
 
@@ -59,7 +59,7 @@ export class AudioService {
 
   private setMuted(muted: boolean): void {
     this.muted = muted;
-    StorageService.setAudioMuted(muted);
+    AudioService.sessionMuted = muted;
     this.scene.sound.setMute(muted);
   }
 }
